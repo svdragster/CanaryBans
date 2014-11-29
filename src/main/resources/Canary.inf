@@ -1,0 +1,5 @@
+;http://svdragster.dtdns.net
+name=CanaryBans
+main-class=de.svdragster.canarybans.CanaryBans
+author=svdragster
+version=1.0
