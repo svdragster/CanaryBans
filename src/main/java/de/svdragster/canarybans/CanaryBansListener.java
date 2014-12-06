@@ -1,8 +1,6 @@
 package de.svdragster.canarybans;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import net.canarymod.Canary;
+import net.canarymod.ToolBox;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.chat.ChatFormat;
 import net.canarymod.hook.HookHandler;
@@ -87,18 +86,21 @@ public class CanaryBansListener implements PluginListener {
 	}
 	
 	public void saveProperties() {
-		File file = new File("config/canarybans/canarybans.properties");
-		if (file.exists()) {
-			PropertiesFile props = new PropertiesFile(file);
+		PropertiesFile props = net.canarymod.config.Configuration.getPluginConfig(new CanaryBans());
+		if (props.containsKey("uuid")) {
 			props.setString("uuid", getUuid());
-			props.setString("password", getPassword());
-			props.setInt("reputation-ban", getReputationBan());
-			props.save();
 		}
+		if (props.containsKey("password")) {
+			props.setString("password", getPassword());
+		}
+		if (props.containsKey("reputation-ban")) {
+			props.setInt("reputation-ban", getReputationBan());
+		}
+		props.save();
 	}
 	
 	public void loadProperties() {
-		File dir = new File("config/canarybans/");
+		/*File dir = new File("config/canarybans/");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
@@ -111,9 +113,10 @@ public class CanaryBansListener implements PluginListener {
 				broadcast(ChatFormat.YELLOW + "Could not create properties: " + e.getMessage());
 				return;
 			}
-		}
+		}*/
 		
-		PropertiesFile props = new PropertiesFile(file);
+		//PropertiesFile props = new PropertiesFile(file);
+		PropertiesFile props = net.canarymod.config.Configuration.getPluginConfig(new CanaryBans());
 		if (!props.containsKey("uuid")) {
 			props.setString("uuid", "null");
 			props.addComment("reputation-ban", "PLEASE don't change uuid or password here, use /cb login or /cb register, or your password won't be hashed");
@@ -190,7 +193,7 @@ public class CanaryBansListener implements PluginListener {
 		if (command.length >= 2) {
 			if (command[0].equalsIgnoreCase("/ban")) {
 				if (hook.getPlayer().hasPermission("cbans.setrep")) {
-					String playerUuid = new MojangUuid(command[1]).getUniqueId();
+					String playerUuid = ToolBox.uuidFromUsername(command[1]).toString();
 					String params = "cbans.php?serverid=" + getUuid() + "&pass=" + getPassword() + "&action=setrep&rep=-100" + "&playerid=" + playerUuid + "&reason=ban";
 					try {
 						sendGet(params);
@@ -201,7 +204,7 @@ public class CanaryBansListener implements PluginListener {
 				}
 			} else if (command[0].equalsIgnoreCase("/unban")) {
 				if (hook.getPlayer().hasPermission("cbans.setrep")) {
-					String playerUuid = new MojangUuid(command[1]).getUniqueId();
+					String playerUuid = ToolBox.uuidFromUsername(command[1]).toString();
 					String params = "cbans.php?serverid=" + getUuid() + "&pass=" + getPassword() + "&action=setrep&rep=0" + "&playerid=" + playerUuid + "&reason=unban";
 					try {
 						sendGet(params);
