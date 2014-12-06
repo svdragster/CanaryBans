@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import net.canarymod.Canary;
+import net.canarymod.ToolBox;
 import net.canarymod.api.OfflinePlayer;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.factory.ItemFactory;
@@ -111,7 +112,8 @@ public class CanaryBansCommands implements CommandListener {
 						//if (offlinePlayer != null) {
 							String uuid;
 							if (offlinePlayer == null) {
-								uuid = new MojangUuid(playername).getUniqueId();
+								//uuid = new MojangUuid(playername).getUniqueId();
+								uuid = ToolBox.uuidFromUsername(playername).toString();
 							} else {
 								uuid = offlinePlayer.getUUIDString();
 							}
@@ -158,7 +160,8 @@ public class CanaryBansCommands implements CommandListener {
 					//if (offlinePlayer != null) {
 						String uuid;
 						if (offlinePlayer == null) {
-							uuid = new MojangUuid(playername).getUniqueId();
+							//uuid = new MojangUuid(playername).getUniqueId();
+							uuid = ToolBox.uuidFromUsername(playername).toString();
 						} else {
 							uuid = offlinePlayer.getUUIDString();
 						}
@@ -246,7 +249,7 @@ public class CanaryBansCommands implements CommandListener {
 		}
 		caller.message(ChatFormat.GRAY + "/cbans register <password> <repeat password>");
 		caller.message(ChatFormat.WHITE + "/cbans changepassword <old password> <new password>");
-		caller.message(ChatFormat.GRAY + "/cbans reputation <playername> <reputation> -- Max: 100, Min: -100");
+		caller.message(ChatFormat.GRAY + "/cbans reputation <playername> <reputation> <reason> -- Max: 100, Min: -100");
 		caller.message(ChatFormat.WHITE + "/cbans info <playername> -- lists all repuation of this player");
 		caller.message(ChatFormat.GRAY + "/cbans load -- loads the canarybans.properties");
 		caller.message(ChatFormat.WHITE + "/cbans save -- saves the canarybans.properties");
